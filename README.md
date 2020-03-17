@@ -301,6 +301,16 @@ File& File::instance()
 
 ```		
 
+ Another example of qdroidjni-tool configuration file
+```text
+dir: "A:/ProjectA/jni"
+(File,file < "A:/ProjectA/com/magabelab/lab/File.java")
+(Wf,wifi < "A:/ProjectA/com/magabelab/lab/Wifi.java")
+(Database,database < "A:/ProjectA/com/magabelab/lab/db.java")
+
+```
+
+
 
                            BUILDING qdroidjni-tool
 
@@ -308,3 +318,5 @@ To build qdroidjni-tool use one of build scripts ( build-debug or build-release)
 	Before running the build script make sure config scripts are configurd with valid paths to c++ compiler,cmake and make 
 
 This project use code extracted from https://github.com/magabe26/MagabeParser
+
+
