@@ -1,0 +1,3 @@
+include(CMakeFindDependencyMacro)
+include("@magabe_parser-parsers_DIR@/lib/cmake/magabe_parser-parsersTargets.cmake")
+

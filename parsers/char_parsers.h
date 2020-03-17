@@ -1,0 +1,96 @@
+/**
+ * Copyright 2020 - MagabeLab (Tanzania). All Rights Reserved.
+ * Author Edwin Magabe    edyma50@yahoo.com
+ */
+
+#ifndef CHAR_PARSERS_H
+#define CHAR_PARSERS_H
+
+#include "core/core.h"
+#include "any_character_parser.h"
+
+/**
+ *-----------------------------------------------
+ * @brief The CharParser class
+ */
+class CharParser: public Parser {
+public:
+    CharParser(unsigned char c1_);
+    CharParser(const CharParser& other);
+
+    virtual ~CharParser();
+
+    // DelegateInterface interface
+    std::shared_ptr<DelegateInterface> makeShared();
+
+private:
+    unsigned char char_;
+    // Delegate interface
+    Result parseOn(Context context);
+};
+
+/**
+ *--------------------------------------------------
+ * @brief The LastCharParserDelegate class
+ */
+class LastCharParserDelegate: public Parser {
+public:
+
+    LastCharParserDelegate();
+
+    // DelegateInterface interface
+    std::shared_ptr<DelegateInterface> makeShared();
+
+    // Delegate interface
+private:
+    Result parseOn(Context context);
+};
+
+/**
+ *--------------------------------------------------
+ * @brief The LastCharParser class
+ */
+class LastCharParser: public Parser {
+public:
+
+    LastCharParser();
+
+    // DelegateInterface interface
+    std::shared_ptr<DelegateInterface> makeShared();
+
+    // Delegate interface
+private:
+    Result parseOn(Context context);
+};
+
+
+/**
+ *----------------------------------------------------
+ * @brief The FirstCharParser class
+ */
+class FirstCharParser: public Parser {
+public:
+
+    FirstCharParser();
+
+    // DelegateInterface interface
+    std::shared_ptr<DelegateInterface> makeShared();
+
+    // Delegate interface
+private:
+    Result parseOn(Context context);
+};
+
+CharParser chaR(unsigned char c);
+
+FirstCharParser firstChar();
+
+LastCharParser lastChar();
+
+Parser remainingChars();
+
+Parser charsBefore(Parser parser);
+
+Parser newLine();
+
+#endif // CHAR_PARSERS_H
