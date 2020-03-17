@@ -33,7 +33,7 @@ dir: "A:/ProjectA/jni"
     let us dissect the above configuration file
 
 ```text
-dir: "A:/ProjectA/jni" ______ Where the generated Qt files are placed
+dir: "A:/ProjectA/jni" ______ Where the generated Qt files are placed(The directory must exist)
 
 (File,file < "A:/ProjectA/com/magabelab/lab/File.java")
   |     |           |
