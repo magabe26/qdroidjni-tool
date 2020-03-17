@@ -306,3 +306,5 @@ File& File::instance()
 
 To build qdroidjni-tool use one of build scripts ( build-debug or build-release).
 	Before running the build script make sure config scripts are configurd with valid paths to c++ compiler,cmake and make 
+
+This project use code extracted from https://github.com/magabe26/MagabeParser
