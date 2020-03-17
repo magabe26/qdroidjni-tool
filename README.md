@@ -55,13 +55,13 @@ dir: "A:/ProjectA/jni" ______ Where the generated Qt files are placed(The direct
 ```
 
   After qdroidjni-tool completes, 5 files are generated
-
+```text
   i)   native_common.h   
   ii)  native_register.h
   iii) native_register.cpp 
   iv)  file.h
   v)   file.cpp
-
+```
 ```text
            # i) native_common.h
 ```
