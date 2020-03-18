@@ -170,38 +170,38 @@ std::string do_mangling(std::string java_type,const std::map<std::string,std::st
 }
 
 /** -----------------------------------------
- * @brief The C_native_method_parameter class
+ * @brief The Jni_native_method_parameter class
  */
-C_native_method_parameter::C_native_method_parameter(){}
+Jni_native_method_parameter::Jni_native_method_parameter(){}
 
-C_native_method_parameter::C_native_method_parameter(const Java_method_parameter &j_m_parameter)
+Jni_native_method_parameter::Jni_native_method_parameter(const Java_method_parameter &j_m_parameter)
 {
     name_ = j_m_parameter.name();
     type_ = to_jni_type(j_m_parameter.type());
 }
 
-C_native_method_parameter::C_native_method_parameter(const C_native_method_parameter &other)
+Jni_native_method_parameter::Jni_native_method_parameter(const Jni_native_method_parameter &other)
 {
     name_ = other.name_;
     type_ = other.type_;
 }
 
-std::string C_native_method_parameter::name() const
+std::string Jni_native_method_parameter::name() const
 {
     return  name_;
 }
 
-bool C_native_method_parameter::is_valid() const
+bool Jni_native_method_parameter::is_valid() const
 {
     return (!type_.empty());
 }
 
-std::string C_native_method_parameter::to_string() const
+std::string Jni_native_method_parameter::to_string() const
 {
     return (name_.empty()) ? type_ : type_ + " "+ name_;
 }
 
-std::string C_native_method_parameter::type() const
+std::string Jni_native_method_parameter::type() const
 {
     return type_;
 }
@@ -209,14 +209,14 @@ std::string C_native_method_parameter::type() const
 
 
 /** --------------------------------------
- * @brief The C_native_method class
+ * @brief The Jni_native_method class
  */
-C_native_method::C_native_method()
+Jni_native_method::Jni_native_method()
     : use_jni_env_parameter_{true}
     , use_class_or_object_parameter_{true}
 {}
 
-C_native_method::C_native_method(const Java_native_method &j_n_method)
+Jni_native_method::Jni_native_method(const Java_native_method &j_n_method)
 {
     name_ = j_n_method.name();
     return_type_ = to_jni_type(j_n_method.return_type());
@@ -230,14 +230,14 @@ C_native_method::C_native_method(const Java_native_method &j_n_method)
     for(std::vector<Java_method_parameter>::size_type i = 0; i < params.size(); i++){
         auto param  = params.at(i);
         stream << do_mangling(param.type(),j_n_method.imports_map(),j_n_method.package_name());
-        method_parameters_.push_back(C_native_method_parameter(param));
+        method_parameters_.push_back(Jni_native_method_parameter(param));
     }
     stream << ")";
     stream << do_mangling(j_n_method.return_type(),j_n_method.imports_map(),j_n_method.package_name());
     signature_ = stream.str();
 }
 
-C_native_method::C_native_method(const C_native_method &other)
+Jni_native_method::Jni_native_method(const Jni_native_method &other)
 {
     name_ = other.name_;
     return_type_ = other.return_type_;
@@ -255,46 +255,46 @@ C_native_method::C_native_method(const C_native_method &other)
     for(std::vector<Java_method_parameter>::size_type i = 0; i < other.method_parameters_.size(); i++){
         auto param = other.method_parameters_.at(i);
         if(param.is_valid()){
-            method_parameters_.push_back(C_native_method_parameter(param));
+            method_parameters_.push_back(Jni_native_method_parameter(param));
         }
     }
 }
 
-bool C_native_method::operator ==(const C_native_method &other){
+bool Jni_native_method::operator ==(const Jni_native_method &other){
     return ((name_ == other.name_) &&
             (signature_ == other.signature_) &&
             (function_code_ == other.function_code_)&&
             (represent_static_java_native_ == other.represent_static_java_native_));
 }
 
-bool C_native_method::operator !=(const C_native_method &other){
+bool Jni_native_method::operator !=(const Jni_native_method &other){
     return ((name_ != other.name_) ||
             (signature_ != other.signature_) ||
             (function_code_ != other.function_code_) ||
             (represent_static_java_native_ != other.represent_static_java_native_));
 }
 
-bool C_native_method::is_valid() const
+bool Jni_native_method::is_valid() const
 {
     return ((!name_.empty())  && (!return_type_.empty()));
 }
 
-std::string C_native_method::name() const
+std::string Jni_native_method::name() const
 {
     return name_;
 }
 
-std::string C_native_method::return_type() const
+std::string Jni_native_method::return_type() const
 {
     return return_type_;
 }
 
-std::vector<C_native_method_parameter> C_native_method::method_parameters() const
+std::vector<Jni_native_method_parameter> Jni_native_method::method_parameters() const
 {
     return method_parameters_;
 }
 
-std::string C_native_method::to_string(Format format) const
+std::string Jni_native_method::to_string(Format format) const
 {
     if(!is_valid()){
         return "";
@@ -335,7 +335,7 @@ std::string C_native_method::to_string(Format format) const
         if(!method_parameters_.empty()){
             stream <<",";
         }
-        for(std::vector<C_native_method_parameter>::size_type i = 0; i < method_parameters_.size(); i++){
+        for(std::vector<Jni_native_method_parameter>::size_type i = 0; i < method_parameters_.size(); i++){
             Whitespace_utils::write_newline(stream,1);
             Whitespace_utils::write_space(stream,param_distance);
             stream << method_parameters_.at(i).to_string();
@@ -357,7 +357,7 @@ std::string C_native_method::to_string(Format format) const
         if(!method_parameters_.empty()){
             stream <<",";
         }
-        for(std::vector<C_native_method_parameter>::size_type i = 0; i < method_parameters_.size(); i++){
+        for(std::vector<Jni_native_method_parameter>::size_type i = 0; i < method_parameters_.size(); i++){
             Whitespace_utils::write_space(stream,1);
             stream << method_parameters_.at(i).to_string();
             if(i != (method_parameters_.size() - 1)){
@@ -381,12 +381,12 @@ std::string C_native_method::to_string(Format format) const
     return stream.str();
 }
 
-std::string C_native_method::signature() const
+std::string Jni_native_method::signature() const
 {
     return signature_;
 }
 
-bool C_native_method::are_same(const C_native_method &m1,const C_native_method &m2)
+bool Jni_native_method::are_same(const Jni_native_method &m1,const Jni_native_method &m2)
 {
     return ((m1.name_ == m2.name_) &&
             (m1.signature_ == m2.signature_));
@@ -468,7 +468,7 @@ Qt_class::Qt_class(const std::string &class_name, const std::string &file_prefix
     if(j_n_methods != nullptr){
         for(std::vector<Java_native_method>::size_type i = 0;i< j_n_methods->size(); i++){
             auto j_n_method = j_n_methods->at(i);
-            c_native_methods_.push_back(C_native_method(j_n_method));
+            jni_native_methods_.push_back(Jni_native_method(j_n_method));
         }
     }
 
@@ -478,9 +478,9 @@ Qt_class::Qt_class(const std::string &class_name, const std::string &file_prefix
 Qt_class::Qt_class(const Qt_class &other){
     class_name_ = other.class_name_;
 
-    c_native_methods_.clear();
-    for(std::vector<C_native_method>::size_type i  = 0; i < other.c_native_methods_.size() ; i++){
-        c_native_methods_.push_back(other.c_native_methods_.at(i));
+    jni_native_methods_.clear();
+    for(std::vector<Jni_native_method>::size_type i  = 0; i < other.jni_native_methods_.size() ; i++){
+        jni_native_methods_.push_back(other.jni_native_methods_.at(i));
     }
 
     qt_methods_.clear();
@@ -528,14 +528,14 @@ std::string Qt_class::class_name() const
     return class_name_;
 }
 
-std::vector<C_native_method> Qt_class::c_native_methods() const
+std::vector<Jni_native_method> Qt_class::c_native_methods() const
 {
-    return c_native_methods_;
+    return jni_native_methods_;
 }
 
 bool Qt_class::is_valid(){
     return  ((!class_name_.empty()) &&
-             (!c_native_methods_.empty()) &&
+             (!jni_native_methods_.empty()) &&
              (!java_class_full_path_.empty()) &&
              (!file_prefix_.empty()) &&
              (!destination_dir_.empty()));

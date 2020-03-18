@@ -131,21 +131,21 @@ bool Qt_class_files::write_source_file()
         if(String_utils::trim(old_content).empty()){
             return File::write(source_file_content(),qt_class_.source_file_path());
         }else{
-            std::vector<C_native_method> qualified_native_methods;
+            std::vector<Jni_native_method> qualified_native_methods;
             auto disc_methods =  get_native_methods_from_content(old_content);
-            for(std::vector<C_native_method>::size_type i = 0;i < qt_class_.c_native_methods().size() ; i++){
+            for(std::vector<Jni_native_method>::size_type i = 0;i < qt_class_.c_native_methods().size() ; i++){
                 auto neW = qt_class_.c_native_methods().at(i);
                 bool are_same = false;
-                for(std::vector<C_native_method>::size_type j = 0;j < disc_methods.size() ; j++){
+                for(std::vector<Jni_native_method>::size_type j = 0;j < disc_methods.size() ; j++){
                     auto olD = disc_methods.at(j);
-                    if(C_native_method::are_same(olD,neW)){
+                    if(Jni_native_method::are_same(olD,neW)){
                         //deal with static status
                         if(olD.represent_static_java_native_ != neW.represent_static_java_native_){
                             olD.represent_static_java_native_ = neW.represent_static_java_native_;
                         }
                         //copy parameters because may be changed
                         olD.method_parameters_.clear();
-                        for(std::vector<C_native_method_parameter>::size_type i = 0;i < neW.method_parameters_.size(); i++){
+                        for(std::vector<Jni_native_method_parameter>::size_type i = 0;i < neW.method_parameters_.size(); i++){
                             olD.method_parameters_.push_back(neW.method_parameters_.at(i));
                         }
 
@@ -159,11 +159,11 @@ bool Qt_class_files::write_source_file()
                 }
             }
 
-            qt_class_.c_native_methods_.clear();
+            qt_class_.jni_native_methods_.clear();
 
             //copy qualified_native_methods
-            for(std::vector<C_native_method>::size_type j = 0;j < qualified_native_methods.size() ; j++){
-                qt_class_.c_native_methods_.push_back(qualified_native_methods.at(j));
+            for(std::vector<Jni_native_method>::size_type j = 0;j < qualified_native_methods.size() ; j++){
+                qt_class_.jni_native_methods_.push_back(qualified_native_methods.at(j));
             }
             //copy qt methods
             copy_qt_methods_from_source(old_content);
@@ -401,7 +401,7 @@ std::string Qt_class_files::header_file_content() const
 
 void Qt_class_files::write_native_methods_to_source_file(std::stringstream &stream) const
 {
-    for(std::vector<C_native_method>::size_type i = 0; i< qt_class_.c_native_methods().size(); i++){
+    for(std::vector<Jni_native_method>::size_type i = 0; i< qt_class_.c_native_methods().size(); i++){
         stream << qt_class_.c_native_methods().at(i).to_string();
     }
 
@@ -592,7 +592,7 @@ std::map<std::string,std::string> Qt_class_files::get_signature_map_from_content
         auto quote = chaR('"').oR(chaR('\''));
         auto match =  chaR(',').firstMatch(pair);
         if(match.isSuccess()){
-            C_native_method_parameter param;
+            Jni_native_method_parameter param;
             auto name =  String_utils::trim(quote.removeFrom(pair.substr(0,match.success().start())));
             auto signature  = String_utils::trim(quote.removeFrom(pair.substr(match.success().end(),pair.length() - match.success().end())));
             name_signature_pair_map[name] = signature;
@@ -616,8 +616,8 @@ std::string Qt_class_files::get_comment(const std::string& function_with_comment
     return  "";
 }
 
-std::vector<C_native_method> Qt_class_files::get_native_methods_from_content(std::string source_file_content){
-    std::vector<C_native_method> methods;
+std::vector<Jni_native_method> Qt_class_files::get_native_methods_from_content(std::string source_file_content){
+    std::vector<Jni_native_method> methods;
 
     const auto signatures_map = get_signature_map_from_content(source_file_content);
     auto native_funs = (comment().seq(spaceOptional()).optional()).seq(native_function_parser()).allMatches(source_file_content);
@@ -649,7 +649,7 @@ std::vector<C_native_method> Qt_class_files::get_native_methods_from_content(std
         fun_declaration.replaceInMapped(native_function,[&methods,this,&signatures_map,&function_code,&native_function_comment](std::string native_function_declaration)->std::string{
             native_function_declaration = String_utils::trim(native_function_declaration);
 
-            C_native_method method;
+            Jni_native_method method;
             //keep comment state
             method.comment_ = native_function_comment;
             //keep function code state
@@ -725,7 +725,7 @@ std::vector<C_native_method> Qt_class_files::get_native_methods_from_content(std
                                     if(!param_str.empty()){
                                         //using space to separate, there param_str must be a trimmed string
                                         auto match =  space().firstMatch(param_str);
-                                        C_native_method_parameter param;
+                                        Jni_native_method_parameter param;
                                         if(match.isSuccess()){
                                             param.type_  = String_utils::trim(param_str.substr(0,match.success().start()));
                                             param.name_ = String_utils::trim(param_str.substr(match.success().end(),param_str.length() - match.success().end()));
@@ -742,7 +742,7 @@ std::vector<C_native_method> Qt_class_files::get_native_methods_from_content(std
                                 //set-up signatures
                                 std::stringstream signature_stream;
                                 signature_stream << "(";
-                                for(std::vector<C_native_method_parameter>::size_type i = 0; i < method.method_parameters_.size(); i++){
+                                for(std::vector<Jni_native_method_parameter>::size_type i = 0; i < method.method_parameters_.size(); i++){
                                     signature_stream << do_mangling_internal(method.method_parameters_.at(i).type());
                                 }
 

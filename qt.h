@@ -14,14 +14,14 @@ std::string to_java_type(std::string jni_type);
 std::string do_mangling(std::string java_type, const std::map<std::string,std::string>& imports_map, std::string package_name);
 
 /** -----------------------------------------
- * @brief The C_native_method_parameter class
+ * @brief The Jni_native_method_parameter class
  */
-class C_native_method_parameter{
+class Jni_native_method_parameter{
 
 public:
-    C_native_method_parameter();
-    explicit C_native_method_parameter(const Java_method_parameter& j_m_parameter);
-    C_native_method_parameter(const C_native_method_parameter& other);
+    Jni_native_method_parameter();
+    explicit Jni_native_method_parameter(const Java_method_parameter& j_m_parameter);
+    Jni_native_method_parameter(const Jni_native_method_parameter& other);
 
     std::string name() const;
     bool is_valid() const;
@@ -37,9 +37,9 @@ private:
 
 
 /** --------------------------------------
- * @brief The C_native_method class
+ * @brief The Jni_native_method class
  */
-class C_native_method{
+class Jni_native_method{
 
 public:
     enum  Format{
@@ -47,18 +47,18 @@ public:
         two
     };
 
-    C_native_method();
-    C_native_method(const Java_native_method& j_n_method);
-    C_native_method(const C_native_method& other);
-    bool operator ==(const C_native_method& other);
-    bool operator !=(const C_native_method& other);
+    Jni_native_method();
+    Jni_native_method(const Java_native_method& j_n_method);
+    Jni_native_method(const Jni_native_method& other);
+    bool operator ==(const Jni_native_method& other);
+    bool operator !=(const Jni_native_method& other);
     bool is_valid() const;
     std::string name() const;
     std::string return_type() const;
-    std::vector<C_native_method_parameter> method_parameters() const;
+    std::vector<Jni_native_method_parameter> method_parameters() const;
     std::string to_string(Format format = Format::two) const;
     std::string signature() const;
-    static bool are_same(const C_native_method &m1, const C_native_method &m2);
+    static bool are_same(const Jni_native_method &m1, const Jni_native_method &m2);
 
 private:
     friend class Qt_class_files;
@@ -66,7 +66,7 @@ private:
     std::string name_;
     std::string return_type_;
     bool represent_static_java_native_;
-    std::vector<C_native_method_parameter> method_parameters_;
+    std::vector<Jni_native_method_parameter> method_parameters_;
     std::string signature_;
     std::string function_code_;
     std::string comment_;
@@ -117,7 +117,7 @@ public:
     std::string header_file_path() const;
     std::string source_file_path() const;
     std::string class_name() const;
-    std::vector<C_native_method> c_native_methods() const;
+    std::vector<Jni_native_method> c_native_methods() const;
     bool is_valid();
     std::string file_prefix() const;
     std::vector<Qt_method> qt_methods() const;
@@ -126,7 +126,7 @@ private:
     friend class Qt_class_files;
 
     std::string class_name_;
-    std::vector<C_native_method> c_native_methods_;
+    std::vector<Jni_native_method> jni_native_methods_;
     std::vector<Qt_method> qt_methods_;
     std::string java_class_full_path_;
     std::string file_prefix_;

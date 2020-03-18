@@ -24,7 +24,7 @@ public:
     bool source_file_exist();
     Parser jni_type_parser();
     Function_parser native_function_parser();
-    std::vector<C_native_method> get_native_methods_from_content(std::string source_file_content);
+    std::vector<Jni_native_method> get_native_methods_from_content(std::string source_file_content);
 
     Qt_method get_init_method() const;
     Qt_method get_constructor_method() const;
